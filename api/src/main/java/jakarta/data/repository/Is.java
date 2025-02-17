@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024,2025 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import jakarta.data.metamodel.restrict.Operator;
+
 /**
  * <p>Annotates a parameter of a repository {@link Find} or {@link Delete} method,
  * indicating how a persistent field is compared against the parameter's value.
@@ -42,7 +44,7 @@ import java.lang.annotation.Target;
  *
  *     // Find a page of Product entities where the name field matches a pattern, ignoring case.
  *     &#64;Find
- *     Page&lt;Product&gt; search(&#64;By(_Product.NAME) &#64;Is(LIKE_ANY_CASE) String pattern,
+ *     Page&lt;Product&gt; search(&#64;By(_Product.NAME) &#64;Is(LIKE) &#64;IgnoreCase String pattern,
  *                          PageRequest pagination,
  *                          Order&lt;Product&gt; order);
  *
@@ -67,65 +69,21 @@ public @interface Is {
      * <pre>
      * &#64;Find
      * &#64;OrderBy(_Person.YEAR_BORN)
-     * List&lt;Person&gt; bornWithin(&#64;By(_Person.YEAR_BORN) &#64;Is(GREATER_THAN_EQ) float minYear,
-     *                         &#64;By(_Person.YEAR_BORN) &#64;Is(LESS_THAN_EQ) float maxYear);
+     * List&lt;Person&gt; bornWithin(&#64;By(_Person.YEAR_BORN) &#64;Is(GREATER_THAN_EQUAL) float minYear,
+     *                         &#64;By(_Person.YEAR_BORN) &#64;Is(LESS_THAN_EQUAL) float maxYear);
      * </pre>
      *
-     * <p>The default comparison operation is the {@linkplain #EQUAL equality}
+     * <p>The default comparison operation is the {@linkplain Operator#EQUAL equality}
      * comparison.</p>
      *
      * <p>For concise code, it can be convenient for a repository interface to
      * statically import one or more constants from this class. For example:</p>
      *
      * <pre>
-     * import static jakarta.data.repository.Is.Op.*;
+     * import static jakarta.data.metamodel.restrict.Operator.*;
      * </pre>
      *
      * @return the type of comparison operation.
      */
-    Op value() default Op.EQUAL;
-
-    /**
-     * <p>Comparison operations for the {@link Is} annotation.</p>
-     *
-     * <p>For more concise code, it can be convenient to statically import one
-     * or more comparison operations. For example:</p>
-     *
-     * <pre>
-     * import static jakarta.data.repository.Is.Op.*;
-     * </pre>
-     */
-    public static enum Op {
-        // TODO add JavaDoc with examples to these
-        ANY_CASE,
-        EQUAL,
-        GREATER_THAN,
-        GREATER_THAN_ANY_CASE,
-        GREATER_THAN_EQ,
-        GREATER_THAN_EQ_ANY_CASE,
-        IN,
-        LESS_THAN,
-        LESS_THAN_ANY_CASE,
-        LESS_THAN_EQ,
-        LESS_THAN_EQ_ANY_CASE,
-        LIKE,
-        LIKE_ANY_CASE,
-        PREFIXED,
-        PREFIXED_ANY_CASE,
-        SUBSTRINGED,
-        SUBSTRINGED_ANY_CASE,
-        SUFFIXED,
-        SUFFIXED_ANY_CASE,
-        NOT,
-        NOT_ANY_CASE,
-        NOT_IN,
-        NOT_LIKE,
-        NOT_LIKE_ANY_CASE,
-        NOT_PREFIXED,
-        NOT_PREFIXED_ANY_CASE,
-        NOT_SUBSTRINGED,
-        NOT_SUBSTRINGED_ANY_CASE,
-        NOT_SUFFIXED,
-        NOT_SUFFIXED_ANY_CASE;
-    }
+    Operator value() default Operator.EQUAL;
 }
