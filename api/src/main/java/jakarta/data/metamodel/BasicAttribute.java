@@ -20,6 +20,7 @@ package jakarta.data.metamodel;
 import jakarta.data.metamodel.restrict.Restrict;
 import jakarta.data.metamodel.restrict.Restriction;
 
+import java.util.Objects;
 import java.util.Set;
 
 /**
