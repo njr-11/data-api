@@ -18,7 +18,11 @@
 package jakarta.data.metamodel.restrict;
 
 import jakarta.data.metamodel.constraint.Constraint;
+import jakarta.data.metamodel.constraint.EqualTo;
 import jakarta.data.metamodel.constraint.Like;
+import jakarta.data.metamodel.constraint.NotEqualTo;
+import jakarta.data.metamodel.constraint.NotLike;
+
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 
@@ -68,8 +72,7 @@ class RestrictTest {
 
         SoftAssertions.assertSoftly(soft -> {
             soft.assertThat(restriction.attribute()).isEqualTo("attributeName");
-            soft.assertThat(restriction.comparison()).isEqualTo(Operator.EQUAL);
-            soft.assertThat(restriction.constraint()).isInstanceOf(Constraint.class);
+            soft.assertThat(restriction.constraint()).isInstanceOf(EqualTo.class);
             soft.assertThat(restriction.constraint()).isEqualTo(Constraint.equalTo(0));
         });
     }
@@ -80,9 +83,8 @@ class RestrictTest {
 
         SoftAssertions.assertSoftly(soft -> {
             soft.assertThat(restriction.attribute()).isEqualTo("attributeName");
-            soft.assertThat(restriction.comparison()).isEqualTo(Operator.NOT_EQUAL);
-            soft.assertThat(restriction.constraint()).isInstanceOf(Constraint.class);
-            soft.assertThat(restriction.constraint()).isEqualTo(Constraint.equalTo(0));
+            soft.assertThat(restriction.constraint()).isInstanceOf(NotEqualTo.class);
+            soft.assertThat(restriction.constraint()).isEqualTo(NotEqualTo.value(0));
         });
     }
 
@@ -92,9 +94,8 @@ class RestrictTest {
 
         SoftAssertions.assertSoftly(soft -> {
             soft.assertThat(restriction.attribute()).isEqualTo("attributeName");
-            soft.assertThat(restriction.comparison()).isEqualTo(Operator.EQUAL);
-            soft.assertThat(restriction.constraint()).isInstanceOf(Like.class);
-            soft.assertThat(restriction.constraint()).isEqualTo(Like.literal("value"));
+            soft.assertThat(restriction.constraint()).isInstanceOf(EqualTo.class);
+            soft.assertThat(restriction.constraint()).isEqualTo(EqualTo.value("value"));
         });
     }
 
@@ -104,9 +105,8 @@ class RestrictTest {
 
         SoftAssertions.assertSoftly(soft -> {
             soft.assertThat(restriction.attribute()).isEqualTo("attributeName");
-            soft.assertThat(restriction.comparison()).isEqualTo(Operator.NOT_EQUAL);
-            soft.assertThat(restriction.constraint()).isInstanceOf(Like.class);
-            soft.assertThat(restriction.constraint()).isEqualTo(Like.literal("value"));
+            soft.assertThat(restriction.constraint()).isInstanceOf(NotEqualTo.class);
+            soft.assertThat(restriction.constraint()).isEqualTo(NotEqualTo.value("value"));
         });
     }
 
@@ -133,8 +133,8 @@ class RestrictTest {
 
         SoftAssertions.assertSoftly(soft -> {
             soft.assertThat(restriction.attribute()).isEqualTo("attributeName");
-            soft.assertThat(restriction.comparison()).isEqualTo(Operator.LIKE);
-            soft.assertThat(restriction.constraint().string()).isEqualTo("%substring%");
+            soft.assertThat(restriction.constraint()).isInstanceOf(Like.class);
+            soft.assertThat(((Like) restriction.constraint()).pattern()).isEqualTo("%substring%");
         });
     }
 
@@ -144,8 +144,8 @@ class RestrictTest {
 
         SoftAssertions.assertSoftly(soft -> {
             soft.assertThat(restriction.attribute()).isEqualTo("attributeName");
-            soft.assertThat(restriction.comparison()).isEqualTo(Operator.NOT_LIKE);
-            soft.assertThat(restriction.constraint().string()).isEqualTo("%substring%");
+            soft.assertThat(restriction.constraint()).isInstanceOf(NotLike.class);
+            soft.assertThat(((NotLike) restriction.constraint()).pattern()).isEqualTo("%substring%");
         });
     }
 
@@ -155,8 +155,8 @@ class RestrictTest {
 
         SoftAssertions.assertSoftly(soft -> {
             soft.assertThat(restriction.attribute()).isEqualTo("attributeName");
-            soft.assertThat(restriction.comparison()).isEqualTo(Operator.LIKE);
-            soft.assertThat(restriction.constraint().string()).isEqualTo("prefix%");
+            soft.assertThat(restriction.constraint()).isInstanceOf(Like.class);
+            soft.assertThat(((Like) restriction.constraint()).pattern()).isEqualTo("prefix%");
         });
     }
 
@@ -166,8 +166,8 @@ class RestrictTest {
 
         SoftAssertions.assertSoftly(soft -> {
             soft.assertThat(restriction.attribute()).isEqualTo("attributeName");
-            soft.assertThat(restriction.comparison()).isEqualTo(Operator.NOT_LIKE);
-            soft.assertThat(restriction.constraint().string()).isEqualTo("prefix%");
+            soft.assertThat(restriction.constraint()).isInstanceOf(NotLike.class);
+            soft.assertThat(((NotLike) restriction.constraint()).pattern()).isEqualTo("prefix%");
         });
     }
 
@@ -177,8 +177,8 @@ class RestrictTest {
 
         SoftAssertions.assertSoftly(soft -> {
             soft.assertThat(restriction.attribute()).isEqualTo("attributeName");
-            soft.assertThat(restriction.comparison()).isEqualTo(Operator.LIKE);
-            soft.assertThat(restriction.constraint().string()).isEqualTo("%suffix");
+            soft.assertThat(restriction.constraint()).isInstanceOf(Like.class);
+            soft.assertThat(((Like) restriction.constraint()).pattern()).isEqualTo("%suffix");
         });
     }
 
@@ -188,8 +188,8 @@ class RestrictTest {
 
         SoftAssertions.assertSoftly(soft -> {
             soft.assertThat(restriction.attribute()).isEqualTo("attributeName");
-            soft.assertThat(restriction.comparison()).isEqualTo(Operator.NOT_LIKE);
-            soft.assertThat(restriction.constraint().string()).isEqualTo("%suffix");
+            soft.assertThat(restriction.constraint()).isInstanceOf(NotLike.class);
+            soft.assertThat(((NotLike) restriction.constraint()).pattern()).isEqualTo("%suffix");
         });
     }
 
@@ -228,7 +228,8 @@ class RestrictTest {
 
     @Test
     void shouldEscapeToLikePatternCorrectly() {
-        String result = Restrict.endsWith("test_value", "attributeName").constraint().string();
+        Like like = (Like) Restrict.endsWith("test_value", "attributeName").constraint();
+        String result = like.pattern();
 
         assertThat(result).isEqualTo("%test\\_value");
     }
