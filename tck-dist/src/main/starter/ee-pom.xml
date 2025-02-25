@@ -39,13 +39,13 @@
 
   <arquillian.version>1.9.3.Final</arquillian.version>
   <arquillian.jakarta.version>10.0.0.Final</arquillian.jakarta.version>
-  <junit.version>5.11.4</junit.version>
-  <sigtest.version>2.5</sigtest.version>
+  <junit.version>5.12.0</junit.version>
+  <sigtest.version>2.6</sigtest.version>
   <shrinkwrap.version>1.2.6</shrinkwrap.version>
   <shrinkwrap.resolver.version>3.3.3</shrinkwrap.resolver.version>
 
   <maven.dep.plugin.version>3.3.0</maven.dep.plugin.version>
-  <maven.comp.plugin.version>3.13.0</maven.comp.plugin.version>
+  <maven.comp.plugin.version>3.14.0</maven.comp.plugin.version>
   <maven.surefire.plugin.version>3.5.2</maven.surefire.plugin.version>
 
   <!-- Location to copy runtime dependencies to application server -->

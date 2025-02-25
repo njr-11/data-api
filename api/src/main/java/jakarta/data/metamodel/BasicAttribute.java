@@ -17,6 +17,7 @@
  */
 package jakarta.data.metamodel;
 
+import jakarta.data.metamodel.constraint.Constraint;
 import jakarta.data.metamodel.restrict.Restrict;
 import jakarta.data.metamodel.restrict.Restriction;
 
@@ -75,6 +76,10 @@ public interface BasicAttribute<T,V> extends Attribute<T> {
         Objects.requireNonNull(name, "entity attribute name is required");
 
         return new BasicAttributeRecord<>(name);
+    }
+
+    default Restriction<T> restrict(Constraint<V> constraint) {
+        return Restrict.restrict(constraint, name());
     }
 }
 
